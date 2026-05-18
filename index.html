@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRANSFORMER · Proprietary Audio Compression Codec</title>
+<meta name="description" content="Audio compression engine with bit-perfect cryptographic verification and anti-reverse-engineering protection. Strategic demonstration build for invited evaluators.">
+<meta property="og:title" content="TRANSFORMER · Audio Compression Codec">
+<meta property="og:description" content="Bit-perfect audio compression with cryptographic verification. Demo under NDA for strategic partners.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-base: #0a0a0f;
+  --bg-elev-1: #11111a;
+  --bg-elev-2: #1a1a28;
+  --bg-elev-3: #232336;
+  --border: rgba(255,255,255,0.06);
+  --border-strong: rgba(255,255,255,0.12);
+  --text-primary: #f5f5fa;
+  --text-secondary: #a8a8c0;
+  --text-tertiary: #6a6a85;
+  --accent-violet: #8b7fff;
+  --accent-violet-bright: #a78bff;
+  --accent-violet-dim: rgba(139, 127, 255, 0.15);
+  --accent-mint: #4ade9e;
+  --accent-mint-dim: rgba(74, 222, 158, 0.12);
+  --accent-amber: #f59e0b;
+  --accent-amber-dim: rgba(245, 158, 11, 0.12);
+  --accent-red: #ef4444;
+  --serif: 'Fraunces', Georgia, serif;
+  --sans: 'Manrope', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+  --max-w: 1180px;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--sans);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.bg-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(ellipse 800px 600px at 20% 0%, var(--accent-violet-dim), transparent 60%), radial-gradient(ellipse 600px 400px at 80% 30%, rgba(74, 222, 158, 0.04), transparent 60%);
+}
+main { position: relative; z-index: 1; }
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(10, 10, 15, 0.7);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 1rem var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.brand-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-violet-bright);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent-violet-bright);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.85); }
+}
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.85rem;
+  font-family: var(--mono);
+  letter-spacing: 0.05em;
+}
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text-primary); }
+@media (max-width: 720px) { .nav-links { display: none; } }
+.hero {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: clamp(4rem, 12vw, 8rem) var(--gutter) clamp(4rem, 8vw, 6rem);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+@media (min-width: 960px) { .hero { grid-template-columns: 1.2fr 0.8fr; align-items: center; } }
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-violet-bright);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.1s forwards;
+}
+.hero-eyebrow::before {
+  content: "";
+  width: 32px;
+  height: 1px;
+  background: var(--accent-violet-bright);
+}
+h1.hero-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2.5rem, 6.5vw, 5.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  margin-bottom: 1.75rem;
+  opacity: 0;
+  animation: fadeUp 1s 0.25s forwards;
+}
+.hero-title em {
+  font-style: italic;
+  background: linear-gradient(120deg, var(--accent-violet-bright), var(--accent-mint));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero-lead {
+  font-size: clamp(1rem, 1.4vw, 1.18rem);
+  color: var(--text-secondary);
+  max-width: 52ch;
+  line-height: 1.65;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeUp 1s 0.4s forwards;
+}
+.hero-cta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 1s 0.55s forwards;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.95rem 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.btn-primary {
+  background: var(--accent-violet);
+  color: #0a0a0f;
+  font-weight: 600;
+}
+.btn-primary:hover {
+  background: var(--accent-violet-bright);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px -8px var(--accent-violet);
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+.btn-secondary:hover {
+  border-color: var(--text-secondary);
+  background: var(--bg-elev-1);
+}
+.btn .arrow { transition: transform 0.25s; }
+.btn:hover .arrow { transform: translateX(3px); }
+.hero-card {
+  background: var(--bg-elev-1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.75rem;
+  position: relative;
+  opacity: 0;
+  animation: fadeUp 1.2s 0.7s forwards;
+  overflow: hidden;
+}
+.hero-card::before {
+  content: "";
+  position: absolute;
+  top: -1px; left: -1px; right: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-violet-bright), transparent);
+}
+.hero-card-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.hero-card-label .status {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--accent-mint);
+}
+.hero-card-label .status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: var(--accent-mint);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--accent-mint);
+}
+.demo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}
+.demo-row:last-child { border-bottom: none; padding-bottom: 0; }
+.demo-row-label { color: var(--text-secondary); }
+.demo-row-value { color: var(--text-primary); font-weight: 500; }
+.demo-row-value.mint { color: var(--accent-mint); }
+.demo-row-value.amber { color: var(--accent-amber); }
+.demo-row-value.violet { color: var(--accent-violet-bright); }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+section {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: clamp(4rem, 10vw, 7rem) var(--gutter);
+}
+.section-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.section-eyebrow::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: var(--text-tertiary);
+}
+.section-eyebrow .num { color: var(--accent-violet-bright); font-weight: 600; }
+h2.section-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+  max-width: 24ch;
+}
+h2.section-title em { font-style: italic; color: var(--accent-violet-bright); }
+.section-lead {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  max-width: 60ch;
+  margin-bottom: 3.5rem;
+  line-height: 1.7;
+}
+.bench-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+@media (min-width: 720px) { .bench-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .bench-grid { grid-template-columns: repeat(4, 1fr); } }
+.bench-cell {
+  background: var(--bg-elev-1);
+  padding: 1.75rem 1.5rem;
+  position: relative;
+  transition: background 0.3s;
+}
+.bench-cell:hover { background: var(--bg-elev-2); }
+.bench-cell .label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 0.6rem;
+}
+.bench-cell .value {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.4rem;
+}
+.bench-cell .desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.bench-cell.highlight .value { color: var(--accent-mint); }
+.bench-cell.highlight2 .value { color: var(--accent-amber); }
+.bench-cell.dim .value { color: var(--text-tertiary); }
+.compare-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.92rem;
+  margin-top: 2rem;
+}
+.compare-table thead th {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  text-align: left;
+  padding: 0.85rem 1.2rem;
+  border-bottom: 1px solid var(--border-strong);
+  font-weight: 500;
+}
+.compare-table tbody td {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+.compare-table tbody tr:last-child td { border-bottom: none; }
+.compare-table tbody tr.featured { background: var(--accent-violet-dim); }
+.compare-table tbody tr.featured td { color: var(--text-primary); font-weight: 500; }
+.compare-table tbody tr.featured td:first-child { color: var(--accent-violet-bright); }
+.compare-table .mint { color: var(--accent-mint); }
+.compare-table .amber { color: var(--accent-amber); }
+.compare-table .dim { color: var(--text-tertiary); }
+.shots {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+@media (min-width: 720px) { .shots { grid-template-columns: repeat(3, 1fr); } }
+.shot {
+  background: var(--bg-elev-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  position: relative;
+  transition: transform 0.3s, border-color 0.3s;
+  overflow: hidden;
+}
+.shot:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-violet-dim);
+  box-shadow: 0 12px 32px -16px rgba(139, 127, 255, 0.3);
+}
+.shot-image-wrap {
+  background: linear-gradient(180deg, var(--bg-base) 0%, #050509 100%);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 9/19;
+  overflow: hidden;
+  position: relative;
+}
+.shot-image-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 80%, rgba(10, 10, 15, 0.4) 100%);
+  pointer-events: none;
+  border-radius: 12px;
+}
+.shot-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 8px;
+  display: block;
+}
+.shot-title {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-violet-bright);
+  margin-bottom: 0.5rem;
+}
+.shot-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.models {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+@media (min-width: 880px) { .models { grid-template-columns: repeat(3, 1fr); } }
+.model {
+  background: var(--bg-elev-1);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 2rem 1.75rem;
+  position: relative;
+  transition: all 0.3s;
+}
+.model:hover { border-color: var(--accent-violet-dim); background: var(--bg-elev-2); }
+.model-label {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 4rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--accent-violet-bright);
+  margin-bottom: 1rem;
+  display: block;
+  letter-spacing: -0.04em;
+}
+.model-title {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+.model-desc {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
+}
+.model-benefit {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--accent-mint);
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  letter-spacing: 0.02em;
+}
+.calc-wrap {
+  background: linear-gradient(135deg, var(--bg-elev-1), var(--bg-elev-2));
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  padding: clamp(2rem, 4vw, 3rem);
+  margin-top: 2rem;
+}
+.calc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+@media (min-width: 880px) { .calc-grid { grid-template-columns: 1fr 1fr; gap: 4rem; } }
+.calc-input-block { margin-bottom: 1.5rem; }
+.calc-input-block label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  display: block;
+  margin-bottom: 0.6rem;
+}
+.calc-slider-row { display: flex; align-items: center; gap: 1.25rem; }
+.calc-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--bg-elev-3);
+  border-radius: 2px;
+  outline: none;
+}
+.calc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--accent-violet-bright);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 0 4px var(--accent-violet-dim);
+  transition: transform 0.15s;
+}
+.calc-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.calc-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--accent-violet-bright);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 0 4px var(--accent-violet-dim);
+}
+.calc-value {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  min-width: 80px;
+  text-align: right;
+  font-weight: 500;
+}
+.calc-output {
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.75rem;
+}
+.calc-output-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.calc-output-row:last-child { border-bottom: none; padding-bottom: 0; }
+.calc-output-row:first-child { padding-top: 0; }
+.calc-output-label {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+.calc-output-value {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+.calc-output-row.total .calc-output-label { color: var(--accent-violet-bright); font-weight: 600; }
+.calc-output-row.total .calc-output-value { font-size: 2rem; color: var(--accent-mint); }
+.calc-note {
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  margin-top: 1.25rem;
+  line-height: 1.5;
+  font-style: italic;
+}
+.faq { margin-top: 2rem; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-item summary {
+  cursor: pointer;
+  padding: 1.5rem 0;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: color 0.2s;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary:hover { color: var(--accent-violet-bright); }
+.faq-item summary::after {
+  content: "+";
+  font-family: var(--mono);
+  font-size: 1.4rem;
+  color: var(--accent-violet-bright);
+  transition: transform 0.3s;
+  font-weight: 300;
+}
+.faq-item[open] summary::after { transform: rotate(45deg); }
+.faq-item-body {
+  padding: 0 0 1.5rem 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: 0.95rem;
+  max-width: 70ch;
+}
+.faq-item-body p + p { margin-top: 0.85rem; }
+.contact-wrap {
+  background: var(--bg-elev-1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: clamp(2.5rem, 5vw, 4rem);
+  text-align: center;
+  margin-top: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.contact-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 600px 300px at 50% 0%, var(--accent-violet-dim), transparent 70%);
+  pointer-events: none;
+}
+.contact-wrap > * { position: relative; }
+.contact-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-violet-bright);
+  margin-bottom: 1.25rem;
+}
+.contact-title {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+  line-height: 1.15;
+}
+.contact-title em { font-style: italic; color: var(--accent-violet-bright); }
+.contact-lead {
+  color: var(--text-secondary);
+  max-width: 50ch;
+  margin: 0 auto 2.25rem;
+  line-height: 1.65;
+}
+.contact-email {
+  font-family: var(--mono);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--text-primary);
+  text-decoration: none;
+  padding: 1rem 1.75rem;
+  background: var(--bg-base);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  transition: all 0.25s;
+}
+.contact-email:hover { border-color: var(--accent-violet-bright); color: var(--accent-violet-bright); }
+.contact-meta {
+  margin-top: 2rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0.05em;
+}
+footer {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 3rem var(--gutter) 4rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0.05em;
+}
+footer a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+footer a:hover { color: var(--text-primary); }
+.footer-links { display: flex; gap: 2rem; }
+.text-mono { font-family: var(--mono); }
+.text-serif { font-family: var(--serif); }
+@media (max-width: 600px) {
+  .hero-cta { flex-direction: column; align-items: stretch; }
+  .btn { justify-content: center; }
+}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<nav>
+  <div class="nav-inner">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      TRANSFORMER
+    </div>
+    <div class="nav-links">
+      <a href="#benchmark">Benchmark</a>
+      <a href="#architecture">Models</a>
+      <a href="#savings">Savings</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+<main>
+  <header class="hero">
+    <div>
+      <div class="hero-eyebrow">Demonstration build · Confidential · 2026</div>
+      <h1 class="hero-title">
+        Audio compression<br>
+        verifiable, <em>bit by bit</em>.
+      </h1>
+      <p class="hero-lead">
+        A proprietary codec that compresses audio losslessly with cryptographic MD5
+        verification, decompresses on the user's device, and reduces streaming platforms'
+        storage costs by up to <strong>70&nbsp;%</strong>. No codec patents, no heavy
+        psychoacoustic models, no dedicated chip dependencies.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#download">
+          Download demo APK
+          <span class="arrow">→</span>
+        </a>
+        <a class="btn btn-secondary" href="#benchmark">
+          See benchmark
+        </a>
+      </div>
+    </div>
+    <aside class="hero-card">
+      <div class="hero-card-label">
+        <span>Sample · Bach, 603&nbsp;KB</span>
+        <span class="status">Verified</span>
+      </div>
+      <div class="demo-row">
+        <span class="demo-row-label">Original (WAV)</span>
+        <span class="demo-row-value">603.0 KB</span>
+      </div>
+      <div class="demo-row">
+        <span class="demo-row-label">TRANSFORMER · Bit-perfect</span>
+        <span class="demo-row-value mint">290.8 KB · 48.2&nbsp;%</span>
+      </div>
+      <div class="demo-row">
+        <span class="demo-row-label">TRANSFORMER · Max</span>
+        <span class="demo-row-value amber">136.0 KB · 22.6&nbsp;%</span>
+      </div>
+      <div class="demo-row">
+        <span class="demo-row-label">ZIP · DEFLATE</span>
+        <span class="demo-row-value" style="color: var(--text-tertiary);">577.6 KB · 95.8&nbsp;%</span>
+      </div>
+      <div class="demo-row">
+        <span class="demo-row-label">MD5 match</span>
+        <span class="demo-row-value mint">✓ identical</span>
+      </div>
+    </aside>
+  </header>
+  <section id="benchmark">
+    <div class="section-eyebrow"><span class="num">01</span>Measured performance</div>
+    <h2 class="section-title">What the codec does, in <em>real numbers</em>.</h2>
+    <p class="section-lead">
+      Tests on 16-bit WAV files, 44.1 kHz, executed inside the app itself on the
+      evaluator's device. These aren't curated figures: the evaluator brings their
+      files, the app reports its metrics.
+    </p>
+    <div class="bench-grid">
+      <div class="bench-cell highlight">
+        <div class="label">Bit-perfect</div>
+        <div class="value">48.2<span style="font-size: 0.55em; opacity: 0.6;">%</span></div>
+        <div class="desc">of original size · mathematically identical reconstruction</div>
+      </div>
+      <div class="bench-cell highlight2">
+        <div class="label">Max (lossy)</div>
+        <div class="value">22.6<span style="font-size: 0.55em; opacity: 0.6;">%</span></div>
+        <div class="desc">SNR 43.7 dB · audio with controlled loss</div>
+      </div>
+      <div class="bench-cell dim">
+        <div class="label">ZIP · DEFLATE</div>
+        <div class="value">95.8<span style="font-size: 0.55em; opacity: 0.6;">%</span></div>
+        <div class="desc">generic compressors don't work on audio</div>
+      </div>
+      <div class="bench-cell">
+        <div class="label">Decompression</div>
+        <div class="value">106<span style="font-size: 0.4em; opacity: 0.6;"> ms</span></div>
+        <div class="desc">time measured on ARM64 mobile hardware</div>
+      </div>
+    </div>
+    <table class="compare-table" style="margin-top: 3rem;">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Final size</th>
+          <th>Mode</th>
+          <th>Verification</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="featured">
+          <td>TRANSFORMER · Bit-perfect</td>
+          <td class="mint">48.2&nbsp;%</td>
+          <td>Lossless</td>
+          <td>✓ MD5 cryptographic</td>
+        </tr>
+        <tr class="featured">
+          <td>TRANSFORMER · Max</td>
+          <td class="amber">22.6&nbsp;%</td>
+          <td>Lossy (43.7 dB)</td>
+          <td>SNR measured</td>
+        </tr>
+        <tr>
+          <td>FLAC (reference)</td>
+          <td>~55-65&nbsp;%</td>
+          <td>Lossless</td>
+          <td>CRC</td>
+        </tr>
+        <tr>
+          <td>ZIP · DEFLATE</td>
+          <td class="dim">95.8&nbsp;%</td>
+          <td>Generic</td>
+          <td>CRC</td>
+        </tr>
+        <tr>
+          <td>GZIP</td>
+          <td class="dim">96.5&nbsp;%</td>
+          <td>Generic</td>
+          <td>CRC</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <section>
+    <div class="section-eyebrow"><span class="num">02</span>Laboratory + engine</div>
+    <h2 class="section-title">The evaluator generates the proof, <em>not receives it</em>.</h2>
+    <p class="section-lead">
+      One app, two screens. The laboratory runs the codec against your own files and
+      reports verifiable metrics. The library stores the compressed <code class="text-mono" style="color: var(--accent-violet-bright);">.tfm</code>
+      files and plays them back with real-time decompression and per-playback
+      cryptographic forensic trace.
+    </p>
+    <div class="shots">
+      <div class="shot">
+        <div class="shot-image-wrap">
+          <img class="shot-image" src="screenshots/lab-benchmark.webp" alt="TRANSFORMER Laboratory screen showing Run Benchmark button and A/B Audio Test with Original, MAX, and BIT-PERFECT playback options" loading="lazy">
+        </div>
+        <div class="shot-title">Laboratory</div>
+        <div class="shot-desc">
+          Select a WAV, run benchmarks against ZIP/GZIP, and listen to the A/B test
+          between original, lossless, and lossy on the same screen.
+        </div>
+      </div>
+      <div class="shot">
+        <div class="shot-image-wrap">
+          <img class="shot-image" src="screenshots/library.webp" alt="TRANSFORMER Library screen showing bach_original with MD5 hash, MAX_compressed.tfm at 22.6%, and BITPERFECT_compressed.tfm at 48.2% lossless MD5 verified" loading="lazy">
+        </div>
+        <div class="shot-title">Library</div>
+        <div class="shot-desc">
+          The <code class="text-mono">.tfm</code> files persist as independent,
+          playable, deletable files. Delete the original and play again: it still works.
+        </div>
+      </div>
+      <div class="shot">
+        <div class="shot-image-wrap">
+          <img class="shot-image" src="screenshots/forensic-trace.webp" alt="TRANSFORMER Forensic Trace screen showing source inspection with TRANSFM magic bytes, real-time decompression in 106 ms, output verification with RIFF magic, and HASH MATCH confirmation between expected and obtained MD5" loading="lazy">
+        </div>
+        <div class="shot-title">Forensic Trace</div>
+        <div class="shot-desc">
+          Each playback displays magic bytes, expected vs obtained MD5, expansion
+          factor, and processing time. Cryptographic proof on screen.
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="architecture">
+    <div class="section-eyebrow"><span class="num">03</span>Deployment models</div>
+    <h2 class="section-title">Three ways to <em>cut infrastructure costs</em>.</h2>
+    <p class="section-lead">
+      We're not selling a better MP3 — that already exists. We offer real
+      architectural flexibility: three deployment modes that replace today's 5-6
+      streaming bitrate versions with 1-2 well-defined copies.
+    </p>
+    <div class="models">
+      <article class="model">
+        <span class="model-label">A.</span>
+        <h3 class="model-title">Server-side reconstruction</h3>
+        <p class="model-desc">
+          Store only the compressed version. Your servers reconstruct at delivery time.
+          The client receives ready-to-play audio, with no changes to its current flow.
+        </p>
+        <div class="model-benefit">
+          ~50-70&nbsp;% less storage<br>
+          Server CPU on smaller files
+        </div>
+      </article>
+      <article class="model">
+        <span class="model-label">B.</span>
+        <h3 class="model-title">Device-side reconstruction</h3>
+        <p class="model-desc">
+          The user's phone decompresses locally. The server becomes a byte-delivery
+          service. Compute load distributes massively across millions of devices.
+        </p>
+        <div class="model-benefit">
+          ~50-70&nbsp;% less storage<br>
+          Server CPU near zero
+        </div>
+      </article>
+      <article class="model">
+        <span class="model-label">C.</span>
+        <h3 class="model-title">Two strategic copies</h3>
+        <p class="model-desc">
+          One bit-perfect version for archival and audiophiles, one max version for
+          mass streaming. You replace today's 5+ bitrates with just 2 copies, served
+          by context.
+        </p>
+        <div class="model-benefit">
+          Less transcoding<br>
+          Fewer decisions, lower costs
+        </div>
+      </article>
+    </div>
+  </section>
+  <section id="savings">
+    <div class="section-eyebrow"><span class="num">04</span>Savings calculator</div>
+    <h2 class="section-title">How much do you save at <em>Spotify scale</em>?</h2>
+    <p class="section-lead">
+      Move the sliders for your own platform. Calculations assume $20/TB/mo cloud
+      storage and proportional CDN cost reduction. Deliberately conservative.
+    </p>
+    <div class="calc-wrap">
+      <div class="calc-grid">
+        <div>
+          <div class="calc-input-block">
+            <label>Tracks in catalog</label>
+            <div class="calc-slider-row">
+              <input type="range" min="1" max="200" value="100" class="calc-slider" id="tracks">
+              <span class="calc-value" id="tracksVal">100M</span>
+            </div>
+          </div>
+          <div class="calc-input-block">
+            <label>Average size (MB / track)</label>
+            <div class="calc-slider-row">
+              <input type="range" min="10" max="60" value="30" class="calc-slider" id="size">
+              <span class="calc-value" id="sizeVal">30 MB</span>
+            </div>
+          </div>
+          <div class="calc-input-block">
+            <label>TRANSFORMER compression (%)</label>
+            <div class="calc-slider-row">
+              <input type="range" min="40" max="80" value="70" class="calc-slider" id="ratio">
+              <span class="calc-value" id="ratioVal">70%</span>
+            </div>
+          </div>
+        </div>
+        <div class="calc-output">
+          <div class="calc-output-row">
+            <span class="calc-output-label">Current storage</span>
+            <span class="calc-output-value" id="storNow">3,000 PB</span>
+          </div>
+          <div class="calc-output-row">
+            <span class="calc-output-label">Storage with TRANSFORMER</span>
+            <span class="calc-output-value" id="storNew">900 PB</span>
+          </div>
+          <div class="calc-output-row">
+            <span class="calc-output-label">Storage freed</span>
+            <span class="calc-output-value" id="storSaved" style="color: var(--accent-mint);">2,100 PB</span>
+          </div>
+          <div class="calc-output-row total">
+            <span class="calc-output-label">Estimated annual savings</span>
+            <span class="calc-output-value" id="costSaved">$504M</span>
+          </div>
+        </div>
+      </div>
+      <p class="calc-note">
+        Estimate only. Actual savings depend on specific architecture, CDN contracts,
+        geographical redundancy, and chosen deployment model (A, B, or C).
+      </p>
+    </div>
+  </section>
+  <section id="faq">
+    <div class="section-eyebrow"><span class="num">05</span>Frequently asked</div>
+    <h2 class="section-title">What you're <em>going to ask</em>.</h2>
+    <div class="faq">
+      <details class="faq-item">
+        <summary>Why deliver an APK and not source code?</summary>
+        <div class="faq-item-body">
+          <p>
+            Because source code isn't the product. The product is the compression
+            system and its protections operating together. Sharing isolated source code
+            without the protected binary would eliminate the layers that justify the
+            licensing model.
+          </p>
+          <p>
+            We don't protect the algorithm by hiding it: we protect it by making
+            copying economically irrational. Delivering the APK is itself a
+            demonstration of confidence in the product's protections.
+          </p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>How do I know the benchmark isn't hardcoded?</summary>
+        <div class="faq-item-body">
+          <p>
+            Because the benchmark runs live, on your file, on your device. The app
+            doesn't carry fixed numbers: it executes the real codec against the WAV
+            you choose and reports what it measures. The expected vs obtained MD5
+            hash is computed on screen.
+          </p>
+          <p>
+            Additionally, you can delete the original WAV after compressing and play
+            the resulting <code class="text-mono">.tfm</code>: if it works, it's
+            because the decompression is real, not a pointer to the original.
+          </p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Does it compete with FLAC?</summary>
+        <div class="faq-item-body">
+          <p>
+            It competes in lossless compression on certain audio profiles
+            (structured, voice, podcast) where TRANSFORMER can match or exceed FLAC.
+            On dense musical audio, FLAC remains competitive.
+          </p>
+          <p>
+            The central difference isn't just the ratio: TRANSFORMER offers three
+            architectural deployment models (server/client/dual), integrated
+            cryptographic verification, and proprietary anti-reverse-engineering
+            protections that FLAC, being open, cannot offer to a commercial platform.
+          </p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>What if someone decompiles it?</summary>
+        <div class="faq-item-body">
+          <p>
+            The binary incorporates two independent obfuscation layers (design-level
+            mathematical + Flutter's native AOT compilation) and an active protection
+            system called <em>Adaptive Integrity Shield</em> that detects analysis
+            environments and silently alters codec behavior.
+          </p>
+          <p>
+            Combined, we estimate an asymmetric cost ratio of approximately 150:1
+            between construction and functional reverse engineering. It's defense,
+            not secrecy: retains value even when fully known.
+          </p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>What file sizes does the demo support?</summary>
+        <div class="faq-item-body">
+          <p>
+            The demonstration build is optimized for interactive evaluation with
+            files from <strong>1 to 20 MB</strong>. Functional range extends to
+            ~30 MB. Significantly larger files may exhaust available memory — this
+            is expected behavior for a reference implementation without streaming.
+          </p>
+          <p>
+            Migration to the C++ engine with FFI (Q4 2026) introduces block-based
+            processing and removes this limit. The <code class="text-mono">.tfm</code>
+            format is identical in both versions; only the memory strategy changes.
+          </p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>How much does licensing cost?</summary>
+        <div class="faq-item-body">
+          <p>
+            The licensing model depends on the use case: volume, integration,
+            regional exclusivity, required support. We don't publish prices — they
+            are negotiated by contract per partner's terms.
+          </p>
+          <p>
+            If your case fits one of the three architectural models (A, B, C),
+            reach out for an exploratory 30-minute call. It's the best way to
+            understand whether it makes sense for both parties.
+          </p>
+        </div>
+      </details>
+    </div>
+  </section>
+  <section id="contact">
+    <div class="section-eyebrow"><span class="num">06</span>Contact</div>
+    <div class="contact-wrap" id="download">
+      <div class="contact-eyebrow">For evaluation under NDA</div>
+      <h2 class="contact-title">
+        Interested in <em>a conversation</em>?
+      </h2>
+      <p class="contact-lead">
+        The demonstration APK is available in GitHub Releases. For licensing,
+        extended evaluation, or a private technical session with production-scale
+        files, contact directly.
+      </p>
+      <a class="contact-email" href="mailto:laboratorioszorion@gmail.com?subject=TRANSFORMER%20%C2%B7%20Evaluation%20inquiry">
+        <span>laboratorioszorion@gmail.com</span>
+        <span class="arrow">→</span>
+      </a>
+      <div class="contact-meta">
+        Damián Torres Robalino · Laboratorios Zorion · Ecuador
+      </div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div>© 2026 Laboratorios Zorion · All rights reserved</div>
+  <div class="footer-links">
+    <a href="https://github.com/Damiantorresr/transformer-codec">GitHub</a>
+    <a href="https://github.com/Damiantorresr/transformer-codec/releases">Releases</a>
+    <a href="https://github.com/Damiantorresr/transformer-codec/blob/main/LICENSE">License</a>
+  </div>
+</footer>
+<script>
+  const tracks = document.getElementById('tracks');
+  const size = document.getElementById('size');
+  const ratio = document.getElementById('ratio');
+  const tracksVal = document.getElementById('tracksVal');
+  const sizeVal = document.getElementById('sizeVal');
+  const ratioVal = document.getElementById('ratioVal');
+  const storNow = document.getElementById('storNow');
+  const storNew = document.getElementById('storNew');
+  const storSaved = document.getElementById('storSaved');
+  const costSaved = document.getElementById('costSaved');
+  function fmtPB(petabytes) {
+    if (petabytes >= 1000) return (petabytes / 1000).toFixed(1) + ' EB';
+    if (petabytes >= 1) return Math.round(petabytes).toLocaleString() + ' PB';
+    return Math.round(petabytes * 1000) + ' TB';
+  }
+  function fmtMoney(usd) {
+    if (usd >= 1e9) return '$' + (usd / 1e9).toFixed(2) + 'B';
+    if (usd >= 1e6) return '$' + (usd / 1e6).toFixed(0) + 'M';
+    if (usd >= 1e3) return '$' + (usd / 1e3).toFixed(0) + 'K';
+    return '$' + Math.round(usd);
+  }
+  function calc() {
+    const t = parseInt(tracks.value);
+    const s = parseInt(size.value);
+    const r = parseInt(ratio.value) / 100;
+    const totalMB = t * 1e6 * s;
+    const totalPB = totalMB / 1e9;
+    const newPB = totalPB * (1 - r);
+    const savedPB = totalPB - newPB;
+    const storageCostMonthly = totalPB * 1000 * 20;
+    const newStorageCostMonthly = newPB * 1000 * 20;
+    const monthlySaved = storageCostMonthly - newStorageCostMonthly;
+    const cdnAnnualBaseline = (totalPB / 3000) * 200e6;
+    const cdnAnnualSaved = cdnAnnualBaseline * r;
+    const annualSaved = monthlySaved * 12 + cdnAnnualSaved;
+    tracksVal.textContent = t + 'M';
+    sizeVal.textContent = s + ' MB';
+    ratioVal.textContent = (r * 100).toFixed(0) + '%';
+    storNow.textContent = fmtPB(totalPB);
+    storNew.textContent = fmtPB(newPB);
+    storSaved.textContent = fmtPB(savedPB);
+    costSaved.textContent = fmtMoney(annualSaved) + '/yr';
+  }
+  [tracks, size, ratio].forEach(el => el.addEventListener('input', calc));
+  calc();
+</script>
+</body>
+</html>

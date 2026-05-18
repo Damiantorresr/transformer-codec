@@ -1,0 +1,87 @@
+PROPRIETARY LICENSE — TRANSFORMER
+
+Copyright (c) 2026 Laboratorios Zorion / Damián Torres Robalino
+All rights reserved.
+
+This software, including the demonstration APK, accompanying documentation,
+and all associated materials (collectively, the "Software"), is proprietary
+and confidential.
+
+GRANT OF EVALUATION USE
+-----------------------
+
+Subject to the terms below, recipients who access this repository are granted
+a limited, non-exclusive, non-transferable, revocable license to:
+
+  (a) Install and run the demonstration APK on personally controlled devices
+      for the sole purpose of technical evaluation;
+
+  (b) Generate benchmarks, comparisons, and analyses using their own input
+      files for evaluation purposes;
+
+  (c) Share the public link to this repository with colleagues for the
+      purpose of evaluation.
+
+PROHIBITED ACTIONS
+------------------
+
+The following actions are explicitly prohibited:
+
+  (1) Reverse engineering, decompilation, disassembly, or any attempt to
+      derive the source code, algorithm, or internal parameters of the
+      Software, by any means including but not limited to dynamic
+      instrumentation, debuggers, memory analysis, or behavioral inference;
+
+  (2) Redistribution of the APK or any derivative thereof through any
+      channel (public, private, commercial, or non-commercial);
+
+  (3) Use of the Software, in whole or in part, in any production system,
+      commercial product, or service;
+
+  (4) Removal, alteration, or obscuring of any proprietary notices,
+      labels, or markings;
+
+  (5) Use of the Software to develop competing products or services;
+
+  (6) Public disclosure of benchmark results, technical observations, or
+      Software behavior without prior written authorization from the
+      copyright holder.
+
+ANTI-TAMPERING NOTICE
+---------------------
+
+The Software incorporates active anti-tampering measures (Adaptive Integrity
+Shield). Attempts to analyze the binary through dynamic instrumentation will
+not produce results representative of production behavior. This is an
+intentional feature of the Software.
+
+NO WARRANTY
+-----------
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY ARISING FROM THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+THIRD-PARTY EVALUATION
+----------------------
+
+For commercial licensing, integration discussions, or extended evaluation
+terms, contact:
+
+  Damián Torres Robalino
+  Founder & Lead Engineer
+  Laboratorios Zorion
+  laboratorioszorion@gmail.com
+
+TERMINATION
+-----------
+
+This license terminates automatically upon any breach of its terms. Upon
+termination, the recipient must cease all use of the Software and destroy
+all copies in their possession.
+
+---
+
+Laboratorios Zorion · 2026 · All rights reserved.
